@@ -223,7 +223,15 @@ trait Caster
         if ($this->hasSetMutator($key)) {
             $method = 'set'.Str::studly($key).'Attribute';
 
-            return $this->{$method}($value);
+            if (method_exists($this, $method)) {
+                $oldValue = $value;
+                $value = $this->{$method}($value);
+                if (!$value instanceof $this && $this->hasCast($key)) {
+                    $value = $this->castAttribute($key, $value);
+                } elseif ($value instanceof $this) {
+                    $value = $oldValue;
+                }
+            }
         }
         // If an attribute is listed as a "date", we'll convert it from a DateTime
         // instance into a form proper for storage on the database tables using
@@ -243,6 +251,7 @@ trait Caster
             return $this->fillJsonAttribute($key, $value);
         }
 
+        $this->{$key} = $value;
         $this->attributes[$key] = $value;
 
         return $this;

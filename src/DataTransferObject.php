@@ -12,6 +12,11 @@ abstract class DataTransferObject extends BaseDTO
 
     public function __construct(array $parameters = [])
     {
+        $this->init($parameters);
+    }
+
+    public function init(array $parameters)
+    {
         $this->__castConstruct($parameters);
 
         $parameters = $this->attributesToArray();
@@ -56,15 +61,5 @@ abstract class DataTransferObject extends BaseDTO
         if (!$this->ignoreMissing && count($parameters)) {
             throw DataTransferObjectError::unknownProperties(array_keys($parameters), static::class);
         }
-    }
-
-    public function init(array $attributes): self
-    {
-        foreach ($attributes as $key => $attribute) {
-            $this->setAttribute($key, $attribute);
-            $this->{$key} = $attribute;
-        }
-
-        return $this;
     }
 }
