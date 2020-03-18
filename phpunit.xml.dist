@@ -1,6 +1,6 @@
 <phpunit bootstrap="vendor/autoload.php"
-         stopOnFailure="true"
-         stopOnError="true"
+         stopOnFailure="false"
+         stopOnError="false"
          colors="true"
          verbose="true"
          processIsolation="false"
