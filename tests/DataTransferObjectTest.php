@@ -29,7 +29,7 @@ class DataTransferObjectTest extends TestCase
         $this->markTestSucceeded();
 
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp(
+        $this->expectExceptionMessageMatches(
             '/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value ``, which is boolean/'
         );
 
@@ -52,7 +52,7 @@ class DataTransferObjectTest extends TestCase
 //        $this->markTestSucceeded();
 //
 //        $this->expectException(DataTransferObjectError::class);
-//        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value ``, which is boolean/');
+//        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value ``, which is boolean/');
 //
 //        new class(['foo' => false]) extends DataTransferObject {
 //            /** @var string */
@@ -105,7 +105,7 @@ class DataTransferObjectTest extends TestCase
     public function null_is_allowed_only_if_explicitly_specified()
     {
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value `null`, which is NULL/');
+        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value `null`, which is NULL/');
 
         new class(['foo' => null]) extends DataTransferObject {
             /** @var string */
@@ -117,7 +117,7 @@ class DataTransferObjectTest extends TestCase
     public function unknown_properties_throw_an_error()
     {
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Public properties `bar` not found on class@anonymous/');
+        $this->expectExceptionMessageMatches('/Public properties `bar` not found on class@anonymous/');
 
         new class(['bar' => null]) extends DataTransferObject {
         };
@@ -215,7 +215,7 @@ class DataTransferObjectTest extends TestCase
         $this->markTestSucceeded();
 
 //        $this->expectException(DataTransferObjectError::class);
-//        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `\\\Spatie\\\DataTransferObject\\\Tests\\\TestClasses\\\DummyClass`, instead got value `class@anonymous[^`]+`, which is object/');
+//        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `\\\Spatie\\\DataTransferObject\\\Tests\\\TestClasses\\\DummyClass`, instead got value `class@anonymous[^`]+`, which is object/');
 
 //        new class(['foo' => new class() {
 //        },
@@ -244,14 +244,14 @@ class DataTransferObjectTest extends TestCase
 //        };
 //
 //        $this->expectException(DataTransferObjectError::class);
-//        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `\\\Spatie\\\DataTransferObject\\\Tests\\\TestClasses\\\DummyClass\[\]`, instead got value `array`, which is array/');
+//        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `\\\Spatie\\\DataTransferObject\\\Tests\\\TestClasses\\\DummyClass\[\]`, instead got value `array`, which is array/');
     }
 
     /** @test */
     public function an_exception_is_thrown_for_a_generic_collection_of_null()
     {
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string\[\]`, instead got value `array`, which is array./');
+        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string\[\]`, instead got value `array`, which is array./');
 
         new class(['foo' => [null]]) extends DataTransferObject {
             /** @var string[] */
@@ -263,7 +263,7 @@ class DataTransferObjectTest extends TestCase
     public function an_exception_is_thrown_when_property_was_not_initialised()
     {
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value `null`, which is NULL/');
+        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value `null`, which is NULL/');
 
         new class([]) extends DataTransferObject {
             /** @var string */
@@ -450,7 +450,7 @@ class DataTransferObjectTest extends TestCase
     public function an_exception_is_thrown_for_incoherent_iterator_type()
     {
         $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::strings` to be of type `iterable<string>`, instead got value `array`, which is array./');
+        $this->expectExceptionMessageMatches('/Invalid type: expected `class@anonymous[^:]+::strings` to be of type `iterable<string>`, instead got value `array`, which is array./');
 
         new class(['strings' => ['foo', 1]]) extends DataTransferObject {
             /** @var iterable<string> */
