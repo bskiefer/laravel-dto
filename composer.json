@@ -1,12 +1,11 @@
 {
-    "name": "ina/laravel-dto",
+    "name": "bkief29/laravel-dto",
     "type": "library",
     "description": "Data Transfer Objects complete with castable attributes and validation.",
     "license": "MIT",
     "authors": [
         {
-            "name": "Brandon Kiefer",
-            "email": "brandon.kiefer@ark.org"
+            "name": "Brandon Kiefer"
         }
     ],
     "require": {
