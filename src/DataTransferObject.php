@@ -2,9 +2,7 @@
 
 namespace bkief29\DTO;
 
-use bkief29\DTO\DataTransferObjectError;
 use Spatie\DataTransferObject\DataTransferObject as BaseDTO;
-use ReflectionClass;
 
 abstract class DataTransferObject extends BaseDTO
 {
@@ -23,10 +21,9 @@ abstract class DataTransferObject extends BaseDTO
         $valueCaster = $this->getValueCaster();
 
         foreach ($validators as $field => $validator) {
-            if (
-                ! isset($parameters[$field])
-                && ! $validator->hasDefaultValue
-                && ! $validator->isNullable
+            if (!isset($parameters[$field])
+                && !$validator->hasDefaultValue
+                && !$validator->isNullable
             ) {
                 throw DataTransferObjectError::uninitialized(
                     static::class,
@@ -42,7 +39,7 @@ abstract class DataTransferObject extends BaseDTO
                 $value = $this->getAttributeValue($field);
             }
 
-            if (! $validator->isValidType($value)) {
+            if (!$validator->isValidType($value)) {
                 throw DataTransferObjectError::invalidType(
                     static::class,
                     $field,
@@ -56,8 +53,18 @@ abstract class DataTransferObject extends BaseDTO
             unset($parameters[$field]);
         }
 
-        if (! $this->ignoreMissing && count($parameters)) {
+        if (!$this->ignoreMissing && count($parameters)) {
             throw DataTransferObjectError::unknownProperties(array_keys($parameters), static::class);
         }
+    }
+
+    public function init(array $attributes): self
+    {
+        foreach ($attributes as $key => $attribute) {
+            $this->setAttribute($key, $attribute);
+            $this->{$key} = $attribute;
+        }
+
+        return $this;
     }
 }

@@ -6,6 +6,7 @@ namespace bkief29\DTO\Tests;
 
 use ArrayIterator;
 use bkief29\DTO\DataTransferObject;
+use bkief29\DTO\Facades\DTO;
 use Spatie\DataTransferObject\DataTransferObjectError;
 use bkief29\DTO\Tests\TestClasses\DummyClass;
 use bkief29\DTO\Tests\TestClasses\EmptyChild;
@@ -39,22 +40,25 @@ class DataTransferObjectTest extends TestCase
     }
 
     /** @test */
-    public function can_call_dto_alias_function()
-    {
-        echo '<pre>';
-        print_r(dto('test', ['test' => 123]));
-        exit(__FILE__ . ' on Line ' . __LINE__);
-
-        $this->markTestSucceeded();
-
-        $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value ``, which is boolean/');
-
-        new class(['foo' => false]) extends DataTransferObject {
-            /** @var string */
-            public $foo;
-        };
-    }
+//    public function can_call_dto_alias_function()
+//    {
+////        dd(new \DTO([]));
+////        dd(resolve('dto', [])->toArray());
+//        dd(DTO::init(['name' => 123]));
+//        echo '<pre>';
+//        print_r(dto(['test' => 123]));
+//        exit(__FILE__ . ' on Line ' . __LINE__);
+//
+//        $this->markTestSucceeded();
+//
+//        $this->expectException(DataTransferObjectError::class);
+//        $this->expectExceptionMessageRegExp('/Invalid type: expected `class@anonymous[^:]+::foo` to be of type `string`, instead got value ``, which is boolean/');
+//
+//        new class(['foo' => false]) extends DataTransferObject {
+//            /** @var string */
+//            public $foo;
+//        };
+//    }
 
     /** @test */
     public function union_types_are_supported()

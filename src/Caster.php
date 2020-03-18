@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 /**
- * Trait Caster
- *
- * @package DataTransferObject
+ * Trait Caster.
  */
 trait Caster
 {
@@ -130,6 +128,7 @@ trait Caster
      * Get an attribute from the object.
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function getAttribute(string $key)
@@ -151,6 +150,7 @@ trait Caster
      * Get a plain attribute.
      *
      * @param string $key
+     *
      * @return mixed
      */
     public function getAttributeValue(string $key)
@@ -178,15 +178,15 @@ trait Caster
             return $this->asDateTime($value);
         }
 
-
         return $value;
     }
 
     /**
      * Get the model's original attribute values.
      *
-     * @param  string|null  $key
-     * @param  mixed  $default
+     * @param string|null $key
+     * @param mixed       $default
+     *
      * @return mixed|array
      */
     public function getOriginal(?string $key = null, $default = null)
@@ -201,7 +201,7 @@ trait Caster
      *
      * @return $this
      */
-    public function fill(array $attributes): self
+    public function fill(array $attributes)
     {
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
@@ -330,6 +330,7 @@ trait Caster
      *
      * @param string $value
      * @param bool   $asObject
+     *
      * @return mixed
      */
     public function fromJson(string $value, bool $asObject = false)
@@ -394,6 +395,7 @@ trait Caster
     public function toCastedArray(): array
     {
         $attributes = $this->attributesToArray();
+
         return array_merge($attributes, $this->nestedObjectsToArray());
     }
 
@@ -555,6 +557,7 @@ trait Caster
      * Get the value for a given offset.
      *
      * @param mixed $offset
+     *
      * @return mixed
      */
     public function offsetGet($offset)
@@ -587,6 +590,7 @@ trait Caster
      * Get an attribute from the $attributes array.
      *
      * @param string $key
+     *
      * @return mixed
      */
     protected function getAttributeFromArray(string $key)
@@ -601,6 +605,7 @@ trait Caster
      *
      * @param string $key
      * @param mixed  $value
+     *
      * @return mixed
      */
     protected function mutateAttribute(string $key, $value)
@@ -625,6 +630,7 @@ trait Caster
      *
      * @param string $key
      * @param mixed  $value
+     *
      * @return mixed
      */
     protected function castAttribute(string $key, $value)
@@ -747,7 +753,6 @@ trait Caster
     /**
      * Prepare a date for array / JSON serialization.
      *
-     *
      * @return string
      */
     protected function serializeDate($date): string
@@ -806,6 +811,7 @@ trait Caster
      *
      * @param string $key
      * @param mixed  $value
+     *
      * @return mixed
      */
     protected function mutateAttributeForArray(string $key, $value)

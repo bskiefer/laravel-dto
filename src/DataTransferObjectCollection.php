@@ -7,7 +7,7 @@ use Countable;
 use Illuminate\Support\Collection;
 use Iterator;
 
-abstract class DataTransferObjectCollection  implements
+abstract class DataTransferObjectCollection implements
     ArrayAccess,
     Iterator,
     Countable
@@ -27,7 +27,7 @@ abstract class DataTransferObjectCollection  implements
 
     public function __call($name, $arguments)
     {
-        return $this->collection->$name(... $arguments);
+        return $this->collection->{$name}(...$arguments);
     }
 
     public function toArray(): array
@@ -35,9 +35,8 @@ abstract class DataTransferObjectCollection  implements
         $collection = $this->collection->toArray();
 
         foreach ($collection as $key => $item) {
-            if (
-                ! $item instanceof DataTransferObject
-                && ! $item instanceof DataTransferObjectCollection
+            if (!$item instanceof DataTransferObject
+                && !$item instanceof self
             ) {
                 continue;
             }
@@ -60,7 +59,7 @@ abstract class DataTransferObjectCollection  implements
 
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if ($offset === null) {
             $this->collection->push($value);
         } else {
             $this->collection->put($offset, $value);
@@ -79,7 +78,7 @@ abstract class DataTransferObjectCollection  implements
 
     public function next()
     {
-        $this->position++;
+        ++$this->position;
     }
 
     public function key(): int
@@ -99,6 +98,6 @@ abstract class DataTransferObjectCollection  implements
 
     public function count(): int
     {
-        return$this->collection->count();
+        return $this->collection->count();
     }
 }
