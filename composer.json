@@ -14,8 +14,8 @@
         "spatie/data-transfer-object": "^1"
     },
     "require-dev": {
-        "orchestra/testbench": "5.x-dev",
-        "phpunit/phpunit": "^8"
+        "orchestra/testbench": "^5.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "sort-packages": true
