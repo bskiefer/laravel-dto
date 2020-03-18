@@ -1,0 +1,13 @@
+
+f	php:S1142ò"PReduce the number of returns of this function 11, down to the maximum allowed 3.(…¬Ï“
+O	php:S3801ˆ"4Refactor this function to use "return" consistently.(»ÒÜıøÿÿÿÿ
+e	php:S1192Ö"JDefine a constant instead of duplicating this literal "Attribute" 4 times.(±öÜ´üÿÿÿÿ
+_	php:S1192Ó"IDefine a constant instead of duplicating this literal "datetime" 3 times.(„šÔÚ
+B	php:S1481÷",Remove this unused "$format" local variable.(—Ş©
+e	php:S1142"OReduce the number of returns of this function 4, down to the maximum allowed 3.(¼¶µ
+d	php:S1117"NRename "$attributes" which has the same name as the field declared at line 26.(üÛóğ
+d	php:S1117ƒ"NRename "$attributes" which has the same name as the field declared at line 26.(Ÿáåé
+1	php:S3626“"Remove this redundant jump.(ûÁİ…
+>	php:S1125–"(Remove the literal "true" boolean value.(šò–ß
+c	php:S1117¦"NRename "$attributes" which has the same name as the field declared at line 26.(ñïÒ
+j	php:S1142"OReduce the number of returns of this function 5, down to the maximum allowed 3.(ğ„¸åıÿÿÿÿ

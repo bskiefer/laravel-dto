@@ -1,0 +1,41 @@
+{
+    "name": "ina/laravel-dto",
+    "type": "library",
+    "description": "Data Transfer Objects complete with castable attributes and validation.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Brandon Kiefer",
+            "email": "brandon.kiefer@ark.org"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "illuminate/support": ">=6",
+        "spatie/data-transfer-object": "^1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "bkief29\\DTO\\DataTransferObjectServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "bkief29\\DTO\\": "src"
+        }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "bkief29\\DTO\\Tests\\": "tests"
+      }
+    },
+    "minimum-stability": "dev"
+}
