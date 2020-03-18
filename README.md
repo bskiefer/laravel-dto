@@ -1,13 +1,18 @@
 # laravel-dto
 Data Transfer Objects complete with castable attributes and validation.
 
+[![Build Status](https://travis-ci.org/bskiefer/laravel-dto.svg?branch=master)](https://travis-ci.org/bskiefer/laravel-dto)
+[![Latest Stable Version](https://poser.pugx.org/bkief29/laravel-dto/v/stable)](https://packagist.org/packages/bkief29/laravel-dto)
+[![Total Downloads](https://poser.pugx.org/bkief29/laravel-dto/downloads)](https://packagist.org/packages/bkief29/laravel-dto)
+[![Latest Unstable Version](https://poser.pugx.org/bkief29/laravel-dto/v/unstable)](https://packagist.org/packages/bkief29/laravel-dto)
+
 ## Example
 ```php
 <?php
 
 namespace Domain\DTO\Requests;
 
-use DataTransferObject\DataTransferObject;
+use bkief29\DTO\DataTransferObject;
 
 /**
  * Class PricesRequest.
