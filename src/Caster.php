@@ -210,6 +210,12 @@ trait Caster
         return $this;
     }
 
+    public function refresh()
+    {
+        $class = get_class($this);
+        return new $class($this->toArray());
+    }
+
     /**
      * Set a given attribute on the object.
      *
@@ -346,6 +352,50 @@ trait Caster
     {
         return json_decode($value, !$asObject);
     }
+
+    /**
+     * Decode the given float.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function fromFloat($value)
+    {
+        switch ((string) $value) {
+            case 'Infinity':
+                return INF;
+            case '-Infinity':
+                return -INF;
+            case 'NaN':
+                return NAN;
+            default:
+                return (float) $value;
+        }
+    }
+
+    /**
+     * Return a decimal as string.
+     *
+     * @param  float  $value
+     * @param  int  $decimals
+     * @return string
+     */
+    protected function asDecimal($value, $decimals)
+    {
+        return number_format($value, $decimals, '.', '');
+    }
+
+    /**
+     * Return a timestamp as DateTime object with time set to 00:00:00.
+     *
+     * @param  mixed  $value
+     * @return \Illuminate\Support\Carbon
+     */
+    protected function asDate($value)
+    {
+        return $this->asDateTime($value)->startOfDay();
+    }
+
 
     /**
      * Set the date format used by the object.
@@ -619,7 +669,9 @@ trait Caster
      */
     protected function mutateAttribute(string $key, $value)
     {
-        return $this->{'get'.Str::studly($key).'Attribute'}($value);
+        $attr = $this->{'get'.Str::studly($key).'Attribute'}($value);
+        $this->setAttribute($key, $attr);
+        return $attr;
     }
 
     /**
@@ -655,7 +707,9 @@ trait Caster
             case 'real':
             case 'float':
             case 'double':
-                return (float) $value;
+                return $this->fromFloat($value);
+            case 'decimal':
+                return $this->asDecimal($value, explode(':', $this->getCasts()[$key], 2)[1]);
             case 'string':
                 return (string) $value;
             case 'bool':
@@ -669,7 +723,9 @@ trait Caster
             case 'collection':
                 return new BaseCollection($this->fromJson($value));
             case 'date':
+                return $this->asDate($value);
             case 'datetime':
+            case 'custom_datetime':
                 return $this->asDateTime($value);
             case 'timestamp':
                 return $this->asTimeStamp($value);
