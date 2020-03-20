@@ -50,6 +50,31 @@ trait Caster
     protected static $mutatorCache = [];
 
     /**
+     * The built-in, primitive cast types supported by Eloquent.
+     *
+     * @var array
+     */
+    protected static $primitiveCastTypes = [
+        'array',
+        'bool',
+        'boolean',
+        'collection',
+        'custom_datetime',
+        'date',
+        'datetime',
+        'decimal',
+        'double',
+        'float',
+        'int',
+        'integer',
+        'json',
+        'object',
+        'real',
+        'string',
+        'timestamp',
+    ];
+
+    /**
      * Create a new Data Transfer Object instance.
      *
      * @param array $attributes
@@ -670,20 +695,55 @@ trait Caster
     protected function mutateAttribute(string $key, $value)
     {
         $attr = $this->{'get'.Str::studly($key).'Attribute'}($value);
+
+        if ($this->hasCast($key)) {
+            $attr = $this->castAttribute($key, $attr);
+        }
+
         $this->setAttribute($key, $attr);
         return $attr;
     }
 
     /**
-     * Get the type of cast for a object attribute.
+     * Get the type of cast for a model attribute.
      *
-     * @param string $key
-     *
+     * @param  string  $key
      * @return string
      */
-    protected function getCastType(string $key): string
+    protected function getCastType($key)
     {
+        if ($this->isCustomDateTimeCast($this->getCasts()[$key])) {
+            return 'custom_datetime';
+        }
+
+        if ($this->isDecimalCast($this->getCasts()[$key])) {
+            return 'decimal';
+        }
+
         return trim(strtolower($this->getCasts()[$key]));
+    }
+
+    /**
+     * Determine if the cast type is a custom date time cast.
+     *
+     * @param  string  $cast
+     * @return bool
+     */
+    protected function isCustomDateTimeCast($cast)
+    {
+        return strncmp($cast, 'date:', 5) === 0 ||
+            strncmp($cast, 'datetime:', 9) === 0;
+    }
+
+    /**
+     * Determine if the cast type is a decimal cast.
+     *
+     * @param  string  $cast
+     * @return bool
+     */
+    protected function isDecimalCast($cast)
+    {
+        return strncmp($cast, 'decimal:', 8) === 0;
     }
 
     /**
@@ -696,11 +756,13 @@ trait Caster
      */
     protected function castAttribute(string $key, $value)
     {
-        if (null === $value) {
+        $castType = $this->getCastType($key);
+
+        if (is_null($value) && in_array($castType, static::$primitiveCastTypes)) {
             return $value;
         }
 
-        switch ($this->getCastType($key)) {
+        switch ($castType) {
             case 'int':
             case 'integer':
                 return (int) $value;
