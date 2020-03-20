@@ -186,22 +186,24 @@ trait Caster
         // it returns as the value, which is useful for transforming values on
         // retrieval from the object to a form that is more useful for usage.
         if ($this->hasGetMutator($key)) {
-            return $this->mutateAttribute($key, $value);
+            $value = $this->mutateAttribute($key, $value);
         }
 
         // If the attribute exists within the cast array, we will convert it to
         // an appropriate native PHP type dependant upon the associated value
         // given with the key in the pair.
         if ($this->hasCast($key)) {
-            return $this->castAttribute($key, $value);
+            $value = $this->castAttribute($key, $value);
         }
 
         // If the attribute is listed as a date, we will convert it to a DateTime
         // instance on retrieval, which makes it quite convenient to work with
         // date fields without having to create a mutator for each property.
         if (in_array($key, $this->getDates(), true) && null !== $value) {
-            return $this->asDateTime($value);
+            $value = $this->asDateTime($value);
         }
+
+        $this->setAttribute($key, $value);
 
         return $value;
     }
@@ -280,6 +282,10 @@ trait Caster
         // attribute in the array's value in the case of deeply nested items.
         if (Str::contains($key, '->')) {
             return $this->fillJsonAttribute($key, $value);
+        }
+
+        if ($this->hasCast($key)) {
+            $value = $this->castAttribute($key, $value);
         }
 
         $this->{$key} = $value;
