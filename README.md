@@ -6,6 +6,10 @@ Data Transfer Objects complete with castable attributes and validation.
 [![Total Downloads](https://poser.pugx.org/bkief29/laravel-dto/downloads)](https://packagist.org/packages/bkief29/laravel-dto)
 [![Latest Unstable Version](https://poser.pugx.org/bkief29/laravel-dto/v/unstable)](https://packagist.org/packages/bkief29/laravel-dto)
 
+## TODO
+
+Implement https://github.com/laravel/framework/tree/2b395cd1f2fe95b67edf97684f09b7c5c4a55152/src/Illuminate/Database/Eloquent/Concerns
+
 ## Example
 ```php
 <?php
