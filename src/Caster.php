@@ -392,6 +392,10 @@ trait Caster
      */
     public function fromFloat($value)
     {
+        if (is_string($value) && str_contains($value, ',')) {
+            $value = str_replace(',', '', $value);
+        }
+
         switch ((string) $value) {
             case 'Infinity':
                 return INF;
