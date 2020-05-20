@@ -417,6 +417,10 @@ trait Caster
      */
     protected function asDecimal($value, $decimals)
     {
+        if (str_contains($value, ',')) {
+            $value = str_replace(',', '', $value);
+        }
+        
         return number_format($value, $decimals, '.', '');
     }
 
