@@ -3,6 +3,7 @@
 namespace bkief29\DTO;
 
 use Spatie\DataTransferObject\DataTransferObject as BaseDTO;
+use Spatie\DataTransferObject\DataTransferObjectCollection;
 
 abstract class DataTransferObject extends BaseDTO
 {
@@ -61,5 +62,30 @@ abstract class DataTransferObject extends BaseDTO
         if (!$this->ignoreMissing && count($parameters)) {
             throw DataTransferObjectError::unknownProperties(array_keys($parameters), static::class);
         }
+    }
+
+
+    protected function parseArray(array $array): array
+    {
+        foreach ($array as $key => $value) {
+            if (
+                $value instanceof \Spatie\DataTransferObject\DataTransferObject
+                || $value instanceof \Spatie\DataTransferObject\DataTransferObjectCollection
+                || $value instanceof \bkief29\DTO\DataTransferObject
+                || $value instanceof \bkief29\DTO\DataTransferObjectCollection
+            ) {
+                $array[$key] = $value->toArray();
+
+                continue;
+            }
+
+            if (!is_array($value)) {
+                continue;
+            }
+
+            $array[$key] = $this->parseArray($value);
+        }
+
+        return $array;
     }
 }

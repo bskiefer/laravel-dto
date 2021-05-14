@@ -6,6 +6,12 @@ use ArrayAccess;
 use Countable;
 use Illuminate\Support\Collection;
 use Iterator;
+use Spatie\DataTransferObject\DataTransferObjectError;
+use Spatie\DataTransferObject\DTOCache;
+use Spatie\DataTransferObject\FieldValidator;
+use ReflectionClass;
+use ReflectionProperty;
+use Spatie\DataTransferObject\ValueCaster;
 
 abstract class DataTransferObjectCollection implements
     ArrayAccess,
@@ -15,14 +21,36 @@ abstract class DataTransferObjectCollection implements
     /** @var int */
     protected $position = 0;
 
-    /**
-     * @var \Illuminate\Support\Collection
-     */
-    private $collection;
+    public $collection;
 
     public function __construct(array $collection = [])
     {
         $this->collection = new Collection($collection);
+        if (0 === $this->collection->count()) {
+            return;
+        }
+
+        $validators = $this->getFieldValidators();
+
+        $valueCaster = $this->getValueCaster();
+
+        foreach ($validators as $field => $validator) {
+            if (
+                !isset($parameters[$field])
+                && !$validator->hasDefaultValue
+                && !$validator->isNullable
+            ) {
+                throw DataTransferObjectError::uninitialized(
+                    static::class,
+                    $field
+                );
+            }
+
+            $value = $collection;
+
+            $value = $this->castValue($valueCaster, $validator, $collection);
+            $this->{$field} = new Collection($value);
+        }
     }
 
     public function __call($name, $arguments)
@@ -99,5 +127,58 @@ abstract class DataTransferObjectCollection implements
     public function count(): int
     {
         return $this->collection->count();
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     * @return \Spatie\DataTransferObject\FieldValidator[]
+     */
+    protected function getFieldValidators(): array
+    {
+        return DTOCache::resolve(
+            static::class,
+            function () {
+                $class = new ReflectionClass(static::class);
+
+                $properties = [];
+
+                foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+                    // Skip static properties
+                    if ($reflectionProperty->isStatic()) {
+                        continue;
+                    }
+
+                    $field = $reflectionProperty->getName();
+
+                    $properties[$field] = FieldValidator::fromReflection($reflectionProperty);
+                }
+
+                return $properties;
+            }
+        );
+    }
+
+    /**
+     * @param \Spatie\DataTransferObject\ValueCaster $valueCaster
+     * @param \Spatie\DataTransferObject\FieldValidator $fieldValidator
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function castValue(ValueCaster $valueCaster, FieldValidator $fieldValidator, $value)
+    {
+        if ($value instanceof Collection) {
+            return $valueCaster->cast($value->toArray(), $fieldValidator);
+        }
+        if (is_array($value)) {
+            return $valueCaster->cast($value, $fieldValidator);
+        }
+
+        return $value;
+    }
+
+
+    protected function getValueCaster(): ValueCaster
+    {
+        return new ValueCaster();
     }
 }

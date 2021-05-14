@@ -193,4 +193,24 @@ class DataTransferObjectCastTest extends TestCase
 
         $this->markTestSucceeded();
     }
+
+    /** @test */
+    public function cast_attribute_using_decimal()
+    {
+        $valueObject = new class(['num1' => '1,000.00']) extends DataTransferObject {
+            /** @var string */
+            public $num1;
+
+
+            protected $casts = [
+                'num1' => 'decimal:2'
+            ];
+        };
+
+        dd($valueObject);
+
+        $this->assertInstanceOf(\Carbon\Carbon::class, $valueObject->dateVar);
+
+        $this->markTestSucceeded();
+    }
 }
