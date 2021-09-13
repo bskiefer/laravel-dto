@@ -10,6 +10,8 @@ abstract class DataTransferObject extends BaseDTO
         Caster::__construct as private __castConstruct;
     }
 
+    protected $ignoreMissing = true;
+
     public function __construct(array $parameters = [])
     {
         $this->init($parameters);
