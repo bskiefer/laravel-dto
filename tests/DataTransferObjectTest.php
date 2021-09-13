@@ -114,13 +114,12 @@ class DataTransferObjectTest extends TestCase
     }
 
     /** @test */
-    public function unknown_properties_throw_an_error()
+    public function unknown_properties_does_not_show_an_error()
     {
-        $this->expectException(DataTransferObjectError::class);
-        $this->expectExceptionMessageMatches('/Public properties `bar` not found on class@anonymous/');
-
-        new class(['bar' => null]) extends DataTransferObject {
+        $valueObject = new class(['bar' => true]) extends DataTransferObject {
         };
+
+        $this->assertEquals(['bar' => true], $valueObject->attributesToArray());
     }
 
     /** @test */
