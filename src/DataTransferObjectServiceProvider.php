@@ -15,6 +15,17 @@ class DataTransferObjectServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
+     * Bootstrap any package services.
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/dto.php' => config_path('dto.php'),
+        ]);
+    }
+
+    /**
      * Register the service provider.
      */
     public function register()
@@ -25,5 +36,10 @@ class DataTransferObjectServiceProvider extends ServiceProvider
             };
         });
         $this->app->alias(DTO::class, 'dto');
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/dto.php',
+            'dto'
+        );
     }
 }

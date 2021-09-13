@@ -10,8 +10,6 @@ abstract class DataTransferObject extends BaseDTO
         Caster::__construct as private __castConstruct;
     }
 
-    protected $ignoreMissing = true;
-
     public function __construct(array $parameters = [])
     {
         $this->init($parameters);
@@ -46,13 +44,15 @@ abstract class DataTransferObject extends BaseDTO
                 $value = $this->getAttributeValue($field);
             }
 
-            if (!$validator->isValidType($value)) {
-                throw DataTransferObjectError::invalidType(
-                    static::class,
-                    $field,
-                    $validator->allowedTypes,
-                    $value
-                );
+            if (config('dto.throwErrorOnInvalidType')) {
+                if (!$validator->isValidType($value)) {
+                    throw DataTransferObjectError::invalidType(
+                        static::class,
+                        $field,
+                        $validator->allowedTypes,
+                        $value
+                    );
+                }
             }
 
             $this->{$field} = $value;
@@ -60,7 +60,7 @@ abstract class DataTransferObject extends BaseDTO
             unset($parameters[$field]);
         }
 
-        if (!$this->ignoreMissing && count($parameters)) {
+        if (!config('dto.ignoreMissing') && !$this->ignoreMissing && count($parameters)) {
             throw DataTransferObjectError::unknownProperties(array_keys($parameters), static::class);
         }
     }
